@@ -56,6 +56,7 @@ export default function App(): JSX.Element {
     const totalExpenses = [...expeses];
     const temo = totalExpenses.filter((item) => item.id !== id);
     setExpenses(temo);
+    localStorage.setItem('expenses', JSON.stringify(temo));
   };
 
   const handleEdit = (id) => {
@@ -80,6 +81,7 @@ export default function App(): JSX.Element {
       }
     });
     setExpenses(temoo);
+    localStorage.setItem('expenses', JSON.stringify(temoo));
   };
   return (
     <div>

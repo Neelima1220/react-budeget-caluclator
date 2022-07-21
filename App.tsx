@@ -109,9 +109,10 @@ export default function App(): JSX.Element {
         }}
       >
         {expeses &&
-          expeses.map((item) => {
+          expeses.map((item, index) => {
             return (
               <div
+                key={index}
                 style={{
                   display: 'flex',
                   alignItems: 'center',

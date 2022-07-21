@@ -19,7 +19,8 @@ export default function App(): JSX.Element {
   const [txtV, setTxtV] = useState<string>('');
   const [numV, setNumV] = useState<number | string>('');
   const [isEdit, setIsEdit] = useState<boolean>(false);
-  const [id, setId] = useState(0);
+  const [editId, setEditId] = useState(0);
+  // const [showNot, setShownot] = useState(false)
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -27,7 +28,7 @@ export default function App(): JSX.Element {
       const totalExpenses = [...expeses];
       if (isEdit) {
         const temop = totalExpenses.map((item) => {
-          return item.id === id ? { ...item, text: txtV, num: numV } : item;
+          return item.id === editId ? { ...item, text: txtV, num: numV } : item;
         });
         setExpenses(temop);
         setIsEdit(false);
@@ -62,11 +63,23 @@ export default function App(): JSX.Element {
     setTxtV(text);
     setNumV(num);
     setIsEdit(true);
-    setId(id);
+    setEditId(id);
+  };
+
+  const handleSpent = (id) => {
+    const totalExpenses = [...expeses];
+    const temoo = totalExpenses.map((item) => {
+      if (item.id === id) {
+        return { ...item, isCompleted: true };
+      } else {
+        return item;
+      }
+    });
+    setExpenses(temoo);
   };
   return (
     <div>
-      {/* <h1 style={{ textAlign: 'center' }}>BUDGET CALUCULATER</h1> */}
+      <h1 style={{ textAlign: 'center' }}>BUDGET CALUCULATER</h1>
       <form
         onSubmit={handleSubmit}
         style={{ textAlign: 'center', marginTop: '2rem' }}
@@ -100,16 +113,19 @@ export default function App(): JSX.Element {
                   alignItems: 'center',
                   justifyContent: 'center',
                   flexDirection: 'row',
+                  backgroundColor: item.isCompleted ? 'green' : '#fff',
+                  margin: '0.5rem',
                 }}
               >
                 <p style={{ width: '150px' }}>{item.text}</p>
                 <button
-                  style={{ width: '50px', marginRight: '1rem' }}
+                  style={{ width: '50px', marginRight: '0.5rem' }}
                   onClick={() => handleEdit(item.id)}
+                  disabled={item.isCompleted}
                 >
                   Edit
                 </button>
-                <button>spent</button>
+                <button onClick={() => handleSpent(item.id)}>spent</button>
                 <button onClick={() => handleDelete(item.id)}>&#10060;</button>
               </div>
             );

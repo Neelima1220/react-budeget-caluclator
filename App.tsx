@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import './style.css';
 
 interface Iexpense {
@@ -8,19 +8,20 @@ interface Iexpense {
   isCompleted: boolean;
 }
 
-const initialExpenses = [
-  { id: 1, text: 'rent', num: '300.50', isCompleted: false },
-  { id: 2, text: 'fee', num: '1300', isCompleted: false },
-  { id: 3, text: 'laptop', num: '500', isCompleted: false },
-];
-
 export default function App(): JSX.Element {
-  const [expeses, setExpenses] = useState<Iexpense[]>(initialExpenses);
+  const [expeses, setExpenses] = useState<Iexpense[]>();
   const [txtV, setTxtV] = useState<string>('');
   const [numV, setNumV] = useState<number | string>('');
   const [isEdit, setIsEdit] = useState<boolean>(false);
   const [editId, setEditId] = useState(0);
-  // const [showNot, setShownot] = useState(false)
+
+  useEffect(() => {
+    if (localStorage.getItem('expenses')) {
+      setExpenses(JSON.parse(localStorage.getItem('expenses')));
+    } else {
+      setExpenses([]);
+    }
+  }, []);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -31,6 +32,7 @@ export default function App(): JSX.Element {
           return item.id === editId ? { ...item, text: txtV, num: numV } : item;
         });
         setExpenses(temop);
+        localStorage.setItem('expenses', JSON.stringify(temop));
         setIsEdit(false);
       } else {
         const newExpense = {
@@ -39,7 +41,9 @@ export default function App(): JSX.Element {
           num: numV,
           isCompleted: false,
         };
-        setExpenses([...totalExpenses, newExpense]);
+        const totExp = [...totalExpenses, newExpense];
+        setExpenses(totExp);
+        localStorage.setItem('expenses', JSON.stringify(totExp));
       }
       setTxtV('');
       setNumV('');
@@ -79,7 +83,7 @@ export default function App(): JSX.Element {
   };
   return (
     <div>
-      <h1 style={{ textAlign: 'center' }}>BUDGET CALUCULATER</h1>
+      {/* <h1 style={{ textAlign: 'center' }}>BUDGET CALUCULATER</h1> */}
       <form
         onSubmit={handleSubmit}
         style={{ textAlign: 'center', marginTop: '2rem' }}

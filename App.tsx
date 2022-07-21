@@ -85,7 +85,7 @@ export default function App(): JSX.Element {
   };
   return (
     <div>
-      {/* <h1 style={{ textAlign: 'center' }}>BUDGET CALUCULATER</h1> */}
+      <h1 style={{ textAlign: 'center' }}>BUDGET CALUCULATER</h1>
       <form
         onSubmit={handleSubmit}
         style={{ textAlign: 'center', marginTop: '2rem' }}

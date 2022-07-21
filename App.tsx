@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import './style.css';
 
 interface Iexpense {
-  id: number;
+  id: number | string;
   text: string;
   num: string | number;
   isCompleted: boolean;
@@ -11,24 +11,58 @@ interface Iexpense {
 const initialExpenses = [
   { id: 1, text: 'rent', num: '300.50', isCompleted: false },
   { id: 2, text: 'fee', num: '1300', isCompleted: false },
-  { id: 1, text: 'laptop', num: '500', isCompleted: false },
+  { id: 3, text: 'laptop', num: '500', isCompleted: false },
 ];
 
 export default function App(): JSX.Element {
   const [expeses, setExpenses] = useState<Iexpense[]>(initialExpenses);
-  const [txtV, setTxtV] = useState<Iexpense['text']>();
-  const [numV, setNumV] = useState<Iexpense['num']>();
+  const [txtV, setTxtV] = useState<string>('');
+  const [numV, setNumV] = useState<number | string>('');
+  const [isEdit, setIsEdit] = useState<boolean>(false);
+  const [id, setId] = useState(0);
 
-  const handleSubmit = () => {
-    const totalExpenses = [...initialExpenses];
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (txtV.trim() !== '' && numV > 0) {
+      const totalExpenses = [...expeses];
+      if (isEdit) {
+        const temop = totalExpenses.map((item) => {
+          return item.id === id ? { ...item, text: txtV, num: numV } : item;
+        });
+        setExpenses(temop);
+        setIsEdit(false);
+      } else {
+        const newExpense = {
+          id: new Date().toString(),
+          text: txtV,
+          num: numV,
+          isCompleted: false,
+        };
+        setExpenses([...totalExpenses, newExpense]);
+      }
+      setTxtV('');
+      setNumV('');
+    } else {
+      window.alert('enter something');
+    }
+  };
 
-    const newExpense = {
-      id: new Date().toString(),
-      text: { txtV },
-      num: numV,
-      isCompleted: false,
-    };
-    const tot = [...totalExpenses, newExpense];
+  const handleDelete = (id) => {
+    const totalExpenses = [...expeses];
+    const temo = totalExpenses.filter((item) => item.id !== id);
+    setExpenses(temo);
+  };
+
+  const handleEdit = (id) => {
+    const totalExpenses = [...expeses];
+    const expeItem = totalExpenses.find((item) => {
+      return item.id === id;
+    });
+    const { text, num } = expeItem;
+    setTxtV(text);
+    setNumV(num);
+    setIsEdit(true);
+    setId(id);
   };
   return (
     <div>
@@ -44,7 +78,7 @@ export default function App(): JSX.Element {
           placeholder="enter rent..."
         />
         <input
-          type="number"
+          type="text"
           value={numV}
           onChange={(e) => setNumV(Number(e.target.value))}
           placeholder="enter num"
@@ -69,11 +103,14 @@ export default function App(): JSX.Element {
                 }}
               >
                 <p style={{ width: '150px' }}>{item.text}</p>
-                <button style={{ width: '50px', marginRight: '1rem' }}>
+                <button
+                  style={{ width: '50px', marginRight: '1rem' }}
+                  onClick={() => handleEdit(item.id)}
+                >
                   Edit
                 </button>
                 <button>spent</button>
-                <button>&#10060;</button>
+                <button onClick={() => handleDelete(item.id)}>&#10060;</button>
               </div>
             );
           })}

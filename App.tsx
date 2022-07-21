@@ -122,6 +122,7 @@ export default function App(): JSX.Element {
                   flexDirection: 'row',
                   backgroundColor: item.isCompleted ? 'green' : '#fff',
                   margin: '0.5rem',
+                  padding: '0 0.5rem',
                 }}
               >
                 <p style={{ width: '150px' }}>{item.text}</p>
@@ -132,8 +133,18 @@ export default function App(): JSX.Element {
                 >
                   Edit
                 </button>
-                <button onClick={() => handleSpent(item.id)}>spent</button>
-                <button onClick={() => handleDelete(item.id)}>&#10060;</button>
+                <button
+                  style={{ width: '50px', marginRight: '0.5rem' }}
+                  onClick={() => handleSpent(item.id)}
+                >
+                  spent
+                </button>
+                <button
+                  style={{ width: '30px' }}
+                  onClick={() => handleDelete(item.id)}
+                >
+                  &#10060;
+                </button>
               </div>
             );
           })}
